@@ -8,15 +8,39 @@ from kivy.app import App
 #Для кодировки
 import os
 from kivy.lang.builder import Builder
+
 #Библиотеки для многих страниц
 from kivy.uix.screenmanager import ScreenManager, Screen
+
+from kivy.uix.boxlayout import BoxLayout
+import time
 
 # Классы для окон
 class MainWindow(Screen):
     pass
 
 class SecondWindow(Screen):
-    pass
+
+    def __init__(self, *args, **kwargs):
+        super(SecondWindow, self).__init__(*args, **kwargs)
+        self.fileName = None
+        self.camera = None
+
+    def initCamera(self):
+        self.camera = self.ids.camera
+        self.camera.resolution = (640, 480)
+        self.camera.keep_ratio = True
+        self.camera.play = True
+        self.camera.allow_stretch = True
+
+    def on_enter(self, *args):
+        self.initCamera()
+
+    def capturePhoto(self):
+        imgTime = time.strftime("%Y%m%d_%H%M%S")
+        self.fileName = "IMG_{}.png".format(imgTime)
+        self.camera.export_to_png(self.fileName)
+        print("Выполнено фотографирование")
 # Менеджер перехода между страницами и передачи данных
 class WindowManager(ScreenManager):
     pass

@@ -6,7 +6,7 @@ WindowManager:
 <Itemlabel@Label>:
     font_size: '25sp' #scalabel pixels, одинаковые для разных расширений
     halign: 'left' #Горизонтальное выравнивание
-    valign: 'middle' #Горизонтальное выравнивание
+    valign: 'middle' #Вертикальное выравнивание
     # Чтобы заработали свойства halign и valign нужно text_size растянуть по размерам самой метки
     text_size: self.size
 
@@ -52,7 +52,7 @@ WindowManager:
                 #Обработчик
                 on_release:
                     #Переход на второе окно
-                    app.root.current = "second"
+                    app.root.current = "camera_for_classification"
                     #Переход окна вправо (текущее уходит влево)
                     root.manager.transition.direction = "left"
 
@@ -69,14 +69,38 @@ WindowManager:
                 #Обработчик
 
 <SecondWindow>:
-    name: "second"
+    name: "camera_for_classification"
+    BoxLayout:
+        Camera:
+            id: camera
+            size_hint: (1, 0.8)
+            pos_hint: {"center_x": 0.5, "top": 0.95}
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: -90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
+            play: False
 
-    Button:
-        text: 'Вернуться назад'
-        font_size: 40
-        #Обработчик
-        on_release:
-            #Возвращение в первое окно
-            app.root.current = "main"
-            #Переход окна влево (текущее уходит вправо)
-            root.manager.transition.direction = "right"
+        ToggleButton:
+            text: 'Начало работы по распознаванию'
+            on_press: camera.play = not camera.play
+            size_hint_y: None
+            height: '48dp'
+        Button:
+            text: 'Захват изображения для работы'
+            size_hint_y: None
+            height: '48dp'
+            on_press: root.capturePhoto()
+        Button:
+            text: 'Вернуться назад'
+            size_hint_y: None
+            height: '48dp'
+            #Обработчик
+            on_release:
+                #Возвращение в первое окно
+                app.root.current = "main"
+                #Переход окна влево (текущее уходит вправо)
+                root.manager.transition.direction = "right"
