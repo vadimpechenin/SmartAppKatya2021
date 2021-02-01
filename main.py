@@ -30,7 +30,7 @@ class SecondWindow(Screen):
         self.camera = self.ids.camera
         self.camera.resolution = (640, 480)
         self.camera.keep_ratio = True
-        self.camera.play = True
+        self.camera.play = False
         self.camera.allow_stretch = True
 
     def on_enter(self, *args):
