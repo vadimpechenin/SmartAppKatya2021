@@ -6,6 +6,9 @@ WindowManager:
     QRWindow:
     FourthWindow:
     ReportsWindow:
+    ReportsWindowDetail:
+
+#: import TextInput kivy.uix.textinput.TextInput
 
 # Одинаковая часть кода
 <Itemlabel@Label>:
@@ -100,8 +103,8 @@ WindowManager:
 
 
             ItemButton:
-                background_normal: '7.jpg'
-                background_down: '7_1.jpg'
+                background_normal: '9.jpg'
+                background_down: '9_1.jpg'
                 #Обработчик
                 on_release:
                     #Переход на второе окно
@@ -205,7 +208,7 @@ WindowManager:
     name: "fourth"
     BoxLayout:
         orientation: 'vertical'
-        rows: 2
+        rows: 4
         canvas:
             Rectangle:
                 source: '4.jpg'
@@ -224,10 +227,29 @@ WindowManager:
             Image:
                 #left, top, right, bottom
                 padding: 0, 0, 30, 0
-                source: '3.jpg'
+                source: '9.jpg'
                 size: self.texture_size
                 size_hint : 1.5, 1.5
                 pos_hint: {"x": 0, "top": 1}
+
+        ScrollView:
+            id: ScrollWindowid
+            size_hint: (1, 1)
+            do_scroll_x: False
+            do_scroll_y: True
+
+
+        Button:
+            id: Scrollbuttonid
+            text: 'Просмотреть номенклатуру'
+            size_hint_y: None
+            pos_hint: {"center_x": 0.5, "y": 0}
+            height: '48dp'
+            width: '420dp'
+            #Обработчик
+            on_release:
+                #Вызывает окно из main.py
+                root.ScrollWindow()
 
         Button:
             text: 'Вернуться назад'
@@ -287,5 +309,45 @@ WindowManager:
             on_release:
                 #Возвращение в первое окно
                 app.root.current = "main"
+                #Переход окна влево (текущее уходит вправо)
+                root.manager.transition.direction = "right"
+
+<ReportsWindowDetail>:
+    name: "reportOfItem"
+    BoxLayout:
+        orientation: 'vertical'
+        rows: 3
+        canvas:
+            Rectangle:
+                source: '4.jpg'
+                size: self.size
+                pos: self.pos
+        Button:
+            id: ButtonScrollWindowReportid
+            text: 'Нажмите'
+            size_hint_y: None
+            height: '48dp'
+            width: '420dp'
+            #Обработчик
+            on_release:
+                root.windowDraw()
+
+        ScrollView:
+            id: ScrollWindowReportid
+            size_hint: (1, 1)
+            do_scroll_x: True
+            do_scroll_y: True
+
+
+        Button:
+            text: 'Вернуться назад'
+            size_hint_y: None
+            height: '48dp'
+            width: '420dp'
+            #Обработчик
+            on_release:
+                root.dellwidget()
+                #Возвращение в первое окно
+                app.root.current = "fourth"
                 #Переход окна влево (текущее уходит вправо)
                 root.manager.transition.direction = "right"
