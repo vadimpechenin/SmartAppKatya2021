@@ -18,6 +18,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
+from kivy.graphics import Color, Rectangle
 
 import time
 
@@ -30,7 +31,33 @@ Window.size = (420, 800)
 ciphers=[]
 comments=[]
 titleOfItems=['№','Дата изготовления','Месторасположение']
-itemsOfDetails = [[1, '10.02.2021', 'Цех №1'], [3, '25.02.2021', 'Цех сбороки'], [5, '25.04.2021', 'Цех №5']]
+itemsOfDetails = [[1, '10.02.2021', 'Цех №1'], [3, '25.02.2021', 'Цех сбороки'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [12, '25.04.2021', 'Цех №10'], [13, '25.04.2021', 'Цех №4'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5'],
+                  [8, '25.05.2021', 'Цех №1'], [10, '25.04.2021', 'Цех №3'], [11, '25.04.2021', 'Цех №5']
+                 ]
 #k=len(t)
 #print(t[1][1])
 for j in range(20):
@@ -40,6 +67,7 @@ for j in range(20):
     comments.append(string_line1)
 listOfItems=True
 
+resText = ''
 # Классы для окон
 class MainWindow(Screen):
     pass
@@ -98,7 +126,7 @@ class FourthWindow(Screen):
     def ScrollWindow(self):
         if (self.listOfItems==True):
             #self.ids.ScrollWindowid.add_widget(ScrollView(size_hint=[1, 1]))
-            self.ids.Scrollbuttonid.text = "List of items received"
+            self.ids.Scrollbuttonid.text = "Список номенклатуры выведен"
             leftGrid = GridLayout(cols=1, size_hint_y=None)
             #Убедимся, что высота такая, чтобы было что прокручивать.
             leftGrid.bind(minimum_height=leftGrid.setter('height'))
@@ -120,13 +148,17 @@ class FourthWindow(Screen):
             for i in range(len(self.ids.ScrollWindowid.children)):
                 self.ids.ScrollWindowid.remove_widget(self.ids.ScrollWindowid.children[-1])
             self.listOfItems = True
+            self.ids.Scrollbuttonid.text = "Просмотреть номенклатуру"
 
     def changer(self, *args):
+        global resText
+        for i in range(len(ciphers)):
+            if self.toggle[i].state == 'down':
+                resText = comments[i]
         #Переход в конкретное описание детали
         self.manager.current = 'reportOfItem'
         #Переход окна вправо (текущее уходит влево)
         self.manager.transition.direction = "left"
-
 class ReportsWindow(Screen):
     pass
 
@@ -136,31 +168,60 @@ class ReportsWindowDetail(Screen):
         self.listOfItems = True
     def windowDraw(self):
         if (self.listOfItems == True):
-            self.ids.ButtonScrollWindowReportid.text = comments[0]
-            leftGrid = GridLayout(cols=len(titleOfItems))
+            self.ids.ButtonScrollWindowReportid.text = resText
+            leftGrid1 = GridLayout(cols=len(titleOfItems), spacing=10, size_hint_y=None)#, size_hint_y=10, size_hint_x=10)
             # Убедимся, что высота такая, чтобы было что прокручивать.
-            leftGrid.bind(minimum_height=leftGrid.setter('height'), minimum_width=leftGrid.setter('width'))
+            leftGrid1.bind(minimum_height=leftGrid1.setter('height'), minimum_width=leftGrid1.setter('width'))#
             self.toggle = []
             for i in range(len(itemsOfDetails)+1):
                 nasted = []
                 self.toggle.append(nasted)
                 for j in range(len(itemsOfDetails[0])):
-                    nasted.append(0)
+                    nasted.append('')
 
             for index in range(len(titleOfItems)):
+                if (index == 0):
+                    width = 50
+                else:
+                    width = 150
+
                 self.toggle[0][index] = Label(
-                    text=str(titleOfItems[index])
+                size_hint_y=None,
+                size_hint_x=None,
+                height=40,
+                width=width,
+                #,
+                padding=(10, 10),
+                    text=str(titleOfItems[index]),
+                    color=(1, 1, 1, 1)
+                    #text_size=(self.width, None)
                 )
-                leftGrid.add_widget(self.toggle[0][index])
+                with self.toggle[0][index].canvas.before:
+                    Color(0, 1, 0, 0.25)
+                    Rectangle(pos=self.toggle[0][index].pos, size=self.toggle[0][index].size)
+                leftGrid1.add_widget(self.toggle[0][index])
 
             for index in range(1,len(itemsOfDetails)+1):
                 for index1 in range(len(itemsOfDetails[0])):
-                    self.toggle[index][index1] = Label(
-                        text=str(itemsOfDetails[index-1][index1])
-                    )
-                    leftGrid.add_widget(self.toggle[index][index1])
+                    if (index1 == 0):
+                        width = 50
+                    else:
+                        width = 150
 
-            self.ids.ScrollWindowReportid.add_widget(leftGrid)
+                    self.toggle[index][index1] = Label(
+                        size_hint_y=None,
+                        size_hint_x=None,
+                        height=40,
+                        width=width,
+                        #text_size=(self.width, None),
+                        padding=(10, 10),
+                        text=str(itemsOfDetails[index-1][index1]),
+                        #text_size=(self.width, None)
+                    )
+                    leftGrid1.add_widget(self.toggle[index][index1])
+            # Убедимся, что высота такая, чтобы было что прокручивать.
+            leftGrid1.bind(minimum_height=leftGrid1.setter('height'), minimum_width=leftGrid1.setter('width'))
+            self.ids.ScrollWindowReportid.add_widget(leftGrid1)
             self.listOfItems = False
         else:
             # удаляет все виджеты, которые находяться в another_box
@@ -170,9 +231,14 @@ class ReportsWindowDetail(Screen):
         #pass
     def dellwidget(self):
         # удаляет все виджеты, которые находяться в another_box
+
         for i in range(len(self.ids.ScrollWindowReportid.children)):
             self.ids.ScrollWindowReportid.remove_widget(self.ids.ScrollWindowReportid.children[-1])
         self.ids.ButtonScrollWindowReportid.text = 'Нажмите'
+        global resText
+        resText = ''
+
+
 # Менеджер перехода между страницами и передачи данных
 class WindowManager(ScreenManager):
     pass
