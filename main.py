@@ -19,13 +19,22 @@ from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.graphics import Color, Rectangle
+from kivy.uix.floatlayout import FloatLayout
+#Библиотека для всплывающих окон
+from kivy.uix.popup import Popup
 
 import time
 
 # Для размера окна
 from kivy.core.window import Window
 
-Window.size = (420, 800)
+koef = 1 #3
+
+if (koef == 1):
+    Window.size = (420, 800)
+else:
+    Window.size = (1100, 2300)
+
 
 
 ciphers=[]
@@ -68,16 +77,41 @@ for j in range(20):
 listOfItems=True
 
 resText = ''
+
+triggerPhoto = 1
+ifTriggerPhotio = 3
+
+
 # Классы для окон
 class MainWindow(Screen):
     pass
 
 class NeiroClassWindow(Screen):
+    global triggerPhoto
     #Класс для создания фото, чтобы их потом загрузить в нейросеть для классификации и идентификации.
     def __init__(self, *args, **kwargs):
         super(NeiroClassWindow, self).__init__(*args, **kwargs)
         self.fileName = None
         self.camera = None
+        self.popup = None
+        self.popup1 = None
+
+    #Включение всплывающего окна
+    def btn(self,*args):
+        # create content and add to the popup
+        PopupGrid = GridLayout(cols=2, size_hint_y=None)
+        content2 = Button(text='QR', halign='left', size_hint=(0.4, 0.1), pos_hint={'x': 0.1, 'top': 0.1})
+        PopupGrid.add_widget(content2)
+        content3 = Button(text='Изображение', halign='left', size_hint=(0.4, 0.1), pos_hint={'x': 0.1, 'top': 0.1})
+        PopupGrid.add_widget(content3)
+
+        self.popup = Popup(title='Сделайте выбор', title_align = 'center', content=PopupGrid, auto_dismiss=False, size_hint=(None, None), size=(int(300*koef), int(200*koef)))
+        # bind the on_press event of the button to the dismiss function
+        #
+        content2.bind(on_press=self.QRPress)#self.QRPress()
+        content3.bind(on_press=self.imgPress)
+        # open the popup
+        self.popup.open()
 
     def initCamera(self):
         self.camera = self.ids.camera
@@ -90,13 +124,65 @@ class NeiroClassWindow(Screen):
         self.initCamera()
 
     def capturePhoto(self):
+        global triggerPhoto, ifTriggerPhotio
         imgTime = time.strftime("%Y%m%d_%H%M%S")
         self.fileName = "IMG_{}.png".format(imgTime)
         self.camera.export_to_png(self.fileName)
         print("Выполнено фотографирование")
+        triggerPhoto +=1
+        if (triggerPhoto<=ifTriggerPhotio):
+            PopupGrid = GridLayout(cols=1, pos_hint={'center_x': 0.6, 'center_y': 0.32})
+            content4 = Button(text='Закрыть', halign='center', size=(int(200 * koef), int(50 * koef)),
+                              size_hint=(None, None), pos=(int(50 * koef), int(50 * koef)),
+                              pos_hint=(None, None))  # size_hint=(0.1, 0.01),pos_hint={'x': 0.1, 'top': 0.5}
+            PopupGrid.add_widget(content4)
+            self.popup1 = Popup(title='Сделайте фото ' + str(triggerPhoto), title_align='center', content=PopupGrid,
+                                auto_dismiss=False,
+                                size_hint=(None, None), pos_hint={"center_x": 0.5, "top": 0.32},
+                                size=(int(300 * koef), int(120 * koef)))
+            content4.bind(on_press=self.popup1.dismiss)
+            self.popup1.open()
+        else:
+            #self.popup1.dismiss()
+            triggerPhoto = 1
+            self.btn()
+
+    def QRPress(self, *args):
+        global ifTriggerPhotio
+        print("QR")
+        self.popup.dismiss()
+        ifTriggerPhotio = 1
+        PopupGrid = GridLayout(cols=1, pos_hint={'center_x': 0.6, 'center_y': 0.32})
+        content4 = Button(text='Закрыть', halign='center', size= (int(200 * koef), int(50 * koef)),
+                          size_hint=(None, None), pos = (int(50 * koef), int(50 * koef)), pos_hint=(None, None))
+        PopupGrid.add_widget(content4)
+        self.popup1 = Popup(title='Считайте QR', title_align='center', content =PopupGrid, auto_dismiss=False,
+                            size_hint=(None, None), pos_hint={"center_x": 0.5, "top": 0.32},
+                            size=(int(300 * koef), int(120 * koef)))
+        content4.bind(on_press=self.popup1.dismiss)
+        self.popup1.open()
+
+
+    def imgPress(self, *args):
+        global ifTriggerPhotio, triggerPhoto
+        print("изображение")
+        self.popup.dismiss()
+        ifTriggerPhotio = 3
+        PopupGrid = GridLayout(cols=1, pos_hint={'center_x': 0.6, 'center_y': 0.32})
+        content4 = Button(text='Закрыть', halign='center', size= (int(200 * koef), int(50 * koef)),
+                          size_hint=(None, None), pos = (int(50 * koef), int(50 * koef)), pos_hint=(None, None))
+        PopupGrid.add_widget(content4)
+        self.popup1 = Popup(title='Сделайте фото ' + str(triggerPhoto), title_align='center', content =PopupGrid, auto_dismiss=False,
+                            size_hint=(None, None), pos_hint={"center_x": 0.5, "top": 0.32},
+                            size=(int(300 * koef), int(120 * koef)))
+        content4.bind(on_press=self.popup1.dismiss)
+        self.popup1.open()
+
 
 class QRWindow(Screen):
     # Класс для считывания QR, или загрузки изображения для считывания QR
+    pass
+    """
     def __init__(self, *args, **kwargs):
         super(QRWindow, self).__init__(*args, **kwargs)
         self.fileName = None
@@ -117,7 +203,7 @@ class QRWindow(Screen):
         self.fileName = "IMG_{}.png".format(imgTime)
         self.camera.export_to_png(self.fileName)
         print("Выполнено считывание QR")
-
+    """
 class FourthWindow(Screen):
     #Окно для просмотра номенклатуры деталей
     def __init__(self, *args, **kwargs):
@@ -136,7 +222,7 @@ class FourthWindow(Screen):
             for index in range(len(ciphers)):
                 self.toggle[index] = ToggleButton(
                     text=ciphers[index],  size_hint_y=None,
-                    group='cipher', height=30,
+                    group='cipher', height=30*koef,
                     )
                 self.toggle[index].bind(on_press=self.changer)
                 leftGrid.add_widget(self.toggle[index])
@@ -181,17 +267,17 @@ class ReportsWindowDetail(Screen):
 
             for index in range(len(titleOfItems)):
                 if (index == 0):
-                    width = 50
+                    width = 50*koef
                 else:
-                    width = 150
+                    width = 150*koef
 
                 self.toggle[0][index] = Label(
                 size_hint_y=None,
                 size_hint_x=None,
-                height=40,
+                height=40*koef,
                 width=width,
                 #,
-                padding=(10, 10),
+                padding=(10*koef, 10*koef),
                     text=str(titleOfItems[index]),
                     color=(1, 1, 1, 1)
                     #text_size=(self.width, None)
@@ -204,17 +290,17 @@ class ReportsWindowDetail(Screen):
             for index in range(1,len(itemsOfDetails)+1):
                 for index1 in range(len(itemsOfDetails[0])):
                     if (index1 == 0):
-                        width = 50
+                        width = 50*koef
                     else:
-                        width = 150
+                        width = 150*koef
 
                     self.toggle[index][index1] = Label(
                         size_hint_y=None,
                         size_hint_x=None,
-                        height=40,
+                        height=40*koef,
                         width=width,
                         #text_size=(self.width, None),
-                        padding=(10, 10),
+                        padding=(10*koef, 10*koef),
                         text=str(itemsOfDetails[index-1][index1]),
                         #text_size=(self.width, None)
                     )
@@ -242,6 +328,17 @@ class ReportsWindowDetail(Screen):
 # Менеджер перехода между страницами и передачи данных
 class WindowManager(ScreenManager):
     pass
+
+class P(FloatLayout):
+    pass
+
+#Функция для всплывающего окна
+def show_popup():
+    show = P()
+
+    popupWindow = Popup(title="Popup Window", content = show, size_hint=(None,None), size=(400,400))
+
+    popupWindow.open()
 
 
 kv = Builder.load_file("kvfiles/my.kv")

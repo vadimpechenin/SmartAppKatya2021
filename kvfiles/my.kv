@@ -77,9 +77,11 @@ WindowManager:
                 #Обработчик
                 on_release:
                     #Переход на второе окно
-                    app.root.current = "camera_for_QR_scanning"
+                    app.root.current = "camera_for_classification"
                     #Переход окна вправо (текущее уходит влево)
                     root.manager.transition.direction = "left"
+
+
         # 3 ряд
         ItemBoxLayout:
             ItemImage:
@@ -92,7 +94,7 @@ WindowManager:
                 #Обработчик
                 on_release:
                     #Переход на второе окно
-                    app.root.current = "camera_for_classification"
+                    app.root.current = "camera_for_QR_scanning"
                     #Переход окна вправо (текущее уходит влево)
                     root.manager.transition.direction = "left"
 
@@ -130,6 +132,7 @@ WindowManager:
 
 <NeiroClassWindow>:
     name: "camera_for_classification"
+
     BoxLayout:
         orientation: 'vertical'
         Camera:
@@ -147,7 +150,10 @@ WindowManager:
 
         ToggleButton:
             text: 'Начало работы по распознаванию'
-            on_press: camera.play = not camera.play
+            on_press:
+
+                camera.play = not camera.play
+                root.btn()
             size_hint_y: None
             height: '48dp'
         Button:
@@ -351,3 +357,4 @@ WindowManager:
                 app.root.current = "fourth"
                 #Переход окна влево (текущее уходит вправо)
                 root.manager.transition.direction = "right"
+
