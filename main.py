@@ -22,6 +22,9 @@ from kivy.graphics import Color, Rectangle
 from kivy.uix.floatlayout import FloatLayout
 #Библиотека для всплывающих окон
 from kivy.uix.popup import Popup
+import io
+from kivy.uix.image import Image
+from kivy.core.image import Image as CoreImage
 
 import time
 
@@ -136,7 +139,7 @@ class NeiroClassWindow(Screen):
                               size_hint=(None, None), pos=(int(50 * koef), int(50 * koef)),
                               pos_hint=(None, None))  # size_hint=(0.1, 0.01),pos_hint={'x': 0.1, 'top': 0.5}
             PopupGrid.add_widget(content4)
-            self.popup1 = Popup(title='Сделайте фото ' + str(triggerPhoto), title_align='center', content=PopupGrid,
+            self.popup1 = Popup(title='Сделайте фото ' + str(triggerPhoto) + ' ракурса', title_align='center', content=PopupGrid,
                                 auto_dismiss=False,
                                 size_hint=(None, None), pos_hint={"center_x": 0.5, "top": 0.32},
                                 size=(int(300 * koef), int(120 * koef)))
@@ -172,7 +175,7 @@ class NeiroClassWindow(Screen):
         content4 = Button(text='Закрыть', halign='center', size= (int(200 * koef), int(50 * koef)),
                           size_hint=(None, None), pos = (int(50 * koef), int(50 * koef)), pos_hint=(None, None))
         PopupGrid.add_widget(content4)
-        self.popup1 = Popup(title='Сделайте фото ' + str(triggerPhoto), title_align='center', content =PopupGrid, auto_dismiss=False,
+        self.popup1 = Popup(title='Сделайте фото с ' + str(triggerPhoto) + ' ракурса', title_align='center', content =PopupGrid, auto_dismiss=False,
                             size_hint=(None, None), pos_hint={"center_x": 0.5, "top": 0.32},
                             size=(int(300 * koef), int(120 * koef)))
         content4.bind(on_press=self.popup1.dismiss)
@@ -181,29 +184,21 @@ class NeiroClassWindow(Screen):
 
 class QRWindow(Screen):
     # Класс для считывания QR, или загрузки изображения для считывания QR
-    pass
-    """
     def __init__(self, *args, **kwargs):
         super(QRWindow, self).__init__(*args, **kwargs)
-        self.fileName = None
-        self.camera = None
 
-    def initCamera(self):
-        self.camera = self.ids.camera
-        self.camera.resolution = (640, 480)
-        self.camera.keep_ratio = True
-        self.camera.play = False
-        self.camera.allow_stretch = True
+    def ImageLoad(self):
+        data = io.BytesIO(open("IMAGE.jpg", "rb").read())
+        im = CoreImage(data, ext="png")
+        self.ids.ImageBoxId.add_widget(Image(texture=im.texture))
 
-    def on_enter(self, *args):
-        self.initCamera()
 
-    def capturePhoto(self):
-        imgTime = time.strftime("%Y%m%d_%H%M%S")
-        self.fileName = "IMG_{}.png".format(imgTime)
-        self.camera.export_to_png(self.fileName)
-        print("Выполнено считывание QR")
-    """
+    def ImageDel(self):
+        # удаляет все виджеты, которые находяться в another_box
+        for i in range(len(self.ids.ImageBoxId.children)):
+            self.ids.ImageBoxId.remove_widget(self.ids.ImageBoxId.children[-1])
+
+
 class FourthWindow(Screen):
     #Окно для просмотра номенклатуры деталей
     def __init__(self, *args, **kwargs):
